@@ -1,4 +1,5 @@
 import { Button, ToastShelf } from "@/components"
+import { ToastData } from "@/helpers"
 import { useState } from "react"
 import styles from "./toast-playground.module.css"
 
@@ -7,15 +8,26 @@ const VARIANT_OPTIONS = ["notice", "warning", "success", "error"]
 function ToastPlayground() {
   const [selectedVariant, setSelectedVariant] = useState("notice")
   const [msg, setMsg] = useState("")
+  const [toasts, setToasts, addToast, toastDeletionHandler] = ToastShelf.useToaster([])
+
+  const handleSubmit = e => {
+    e.preventDefault()
+
+    const newToast = new ToastData(selectedVariant, msg, toastDeletionHandler)
+    addToast(newToast)
+
+    setSelectedVariant("notice")
+    setMsg("")
+  }
 
   return (
-    <section className={styles.wrapper}>
+    <form onSubmit={handleSubmit} className={styles.wrapper}>
       <header>
         <img alt="Cute toast mascot" src="/toast.png" />
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf />
+      <ToastShelf toasts={toasts} />
 
       <div className={styles.controlsWrapper}>
         <div className={styles.row}>
@@ -54,11 +66,11 @@ function ToastPlayground() {
         <div className={styles.row}>
           <div className={styles.label} />
           <div className={`${styles.inputWrapper} ${styles.radioWrapper}`}>
-            <Button onClick={() => setToastShown(true)}>Pop Toast!</Button>
+            <Button type="submit">Pop Toast!</Button>
           </div>
         </div>
       </div>
-    </section>
+    </form>
   )
 }
 
