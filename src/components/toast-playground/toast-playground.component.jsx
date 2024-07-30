@@ -1,13 +1,14 @@
 import { Button, ToastShelf } from "@/components"
+import { useToasterContext } from "@/contexts"
 import { useState } from "react"
 import styles from "./toast-playground.module.css"
 
 const VARIANT_OPTIONS = ["notice", "warning", "success", "error"]
 
 function ToastPlayground() {
+  const [, addToast] = useToasterContext()
   const [selectedVariant, setSelectedVariant] = useState(VARIANT_OPTIONS[0])
   const [msg, setMsg] = useState("")
-  const [toasts, , addToast] = ToastShelf.useToaster([])
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -25,7 +26,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf toasts={toasts} />
+      <ToastShelf />
 
       <form onSubmit={handleSubmit} className={styles.controlsWrapper}>
         <div className={styles.row}>
