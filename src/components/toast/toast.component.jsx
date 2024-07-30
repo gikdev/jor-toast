@@ -13,7 +13,7 @@ const ICONS_BY_VARIANT = {
 // 👇🏻 Same as writing 👉🏻 ['notice', 'warning', 'success', 'error']
 const AVAILABLE_VARIANTS = Object.keys(ICONS_BY_VARIANT)
 
-function Toast({ variant, message = "Empty message", onDismiss }) {
+function Toast({ variant, children = "Empty message", onDismiss }) {
   const [Icon, setIcon] = useState(HelpCircle)
 
   // 💪🏻 Defensive programming!!!
@@ -31,7 +31,7 @@ function Toast({ variant, message = "Empty message", onDismiss }) {
       <div className={styles.iconContainer}>
         <Icon size={24} />
       </div>
-      <p className={styles.content}>{message}</p>
+      <p className={styles.content}>{children}</p>
       <button type="button" className={styles.closeButton} onClick={onDismiss}>
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
