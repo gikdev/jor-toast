@@ -1,13 +1,13 @@
 import { Toast } from "@/components"
 import { useToasterContext } from "@/contexts"
-import { useCallback, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import styles from "./toast-shelf.module.css"
 
 function ToastShelf() {
   const [toasts] = useToasterContext()
 
   return (
-    <ol className={styles.wrapper}>
+    <ol role="region" aria-live="polite" aria-label="Notification" className={styles.wrapper}>
       {toasts?.map(toast => (
         <li key={toast.id} className={styles.toastWrapper}>
           <Toast {...toast} />
@@ -19,6 +19,18 @@ function ToastShelf() {
 
 function useToaster(initialValue = []) {
   const [toasts, setToasts] = useState(initialValue)
+
+  useEffect(() => {
+    // Dismiss all toasts on escape key
+    const dismissAllOnEscape = e => {
+      if (e.code !== "Escape") return
+      setToasts([])
+    }
+
+    window.addEventListener("keydown", dismissAllOnEscape)
+
+    return () => window.removeEventListener("keydown", dismissAllOnEscape)
+  }, [])
 
   const toastDeletionHandler = useCallback(id => {
     function toastsSetter(currentToasts) {
