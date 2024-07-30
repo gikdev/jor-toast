@@ -1,6 +1,6 @@
 import { Toast } from "@/components"
 import { useToasterContext } from "@/contexts"
-import { useKey } from "@/hooks"
+import { useKeyDown } from "@/hooks"
 import { useCallback, useState } from "react"
 import styles from "./toast-shelf.module.css"
 
@@ -22,7 +22,7 @@ function useToaster(initialValue = []) {
   const [toasts, setToasts] = useState(initialValue)
 
   const dismissAllToasts = useCallback(() => setToasts([]), [])
-  useKey("Escape", dismissAllToasts)
+  useKeyDown("Escape", dismissAllToasts)
 
   const toastDeletionHandler = useCallback(id => {
     function toastsSetter(currentToasts) {
