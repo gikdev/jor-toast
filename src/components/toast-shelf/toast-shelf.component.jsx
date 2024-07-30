@@ -17,15 +17,30 @@ function ToastShelf({ toasts }) {
 function useToaster(initialValue = []) {
   const [toasts, setToasts] = useState(initialValue)
 
-  const addToast = useCallback(toast => {
-    setToasts(currentToasts => [...currentToasts, toast])
-  }, [])
-
   const toastDeletionHandler = useCallback(id => {
-    setToasts(currentToasts => [...currentToasts].filter(item => item.id !== id), [])
+    function toastsSetter(currentToasts) {
+      let clone = [...currentToasts]
+      clone = clone.filter(item => item.id !== id)
+      return clone
+    }
+
+    setToasts(toastsSetter)
   }, [])
 
-  return [toasts, setToasts, addToast, toastDeletionHandler]
+  const addToast = useCallback((variant, children) => {
+    const id = crypto.randomUUID()
+    const onDismiss = () => toastDeletionHandler(id)
+
+    function toastsSetter(currentToasts) {
+      const clone = [...currentToasts]
+      clone.push({ variant, children, id, onDismiss })
+      return clone
+    }
+
+    setToasts(toastsSetter)
+  }, [toastDeletionHandler])
+
+  return [toasts, setToasts, addToast]
 }
 
 ToastShelf.useToaster = useToaster
