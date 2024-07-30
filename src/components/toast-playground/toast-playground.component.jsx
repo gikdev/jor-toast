@@ -1,5 +1,4 @@
 import { Button, Toast } from "@/components"
-import { useToast } from "@/components/toast/toast.component"
 import { useState } from "react"
 import styles from "./toast-playground.module.css"
 
@@ -8,7 +7,7 @@ const VARIANT_OPTIONS = ["notice", "warning", "success", "error"]
 function ToastPlayground() {
   const [selectedVariant, setSelectedVariant] = useState("notice")
   const [msg, setMsg] = useState("")
-  const [isToastShown, toggleToastShown, setToastShown] = useToast(false)
+  const [isToastShown, toggleToastShown, setToastShown] = Toast.useToast(false)
 
   return (
     <section className={styles.wrapper}>

@@ -48,5 +48,6 @@ function useToast(initialValue = false) {
   return [isShown, toggle, setShown]
 }
 
-export { useToast }
+Toast.useToast = useToast
+
 export default Toast
