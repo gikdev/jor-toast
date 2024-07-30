@@ -1,9 +1,10 @@
+import { useEffect, useState } from "react"
 import styles from "./visually-hidden.module.css"
 
 const VisuallyHidden = ({ children, className = "", ...delegated }) => {
-  const [forceShow, setForceShow] = React.useState(false)
+  const [forceShow, setForceShow] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (import.meta.env.DEV) {
       const handleKeyDown = ev => {
         if (ev.key === "Alt") {

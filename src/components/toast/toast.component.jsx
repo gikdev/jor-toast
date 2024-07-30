@@ -1,5 +1,6 @@
 import { VisuallyHidden } from "@/components"
-import { AlertOctagon, AlertTriangle, CheckCircle, Info, X } from "react-feather"
+import { useCallback, useEffect, useState } from "react"
+import { AlertOctagon, AlertTriangle, CheckCircle, HelpCircle, Info, X } from "react-feather"
 import styles from "./toast.module.css"
 
 const ICONS_BY_VARIANT = {
@@ -9,14 +10,29 @@ const ICONS_BY_VARIANT = {
   error: AlertOctagon,
 }
 
-function Toast() {
+// 👇🏻 Same as writing 👉🏻 ['notice', 'warning', 'success', 'error']
+const AVAILABLE_VARIANTS = Object.keys(ICONS_BY_VARIANT)
+
+function Toast({ variant, message = "Empty message", onDismiss }) {
+  const [Icon, setIcon] = useState(HelpCircle)
+
+  // 💪🏻 Defensive programming!!!
+  if (typeof variant !== "string" || !AVAILABLE_VARIANTS.includes(variant)) {
+    throw new Error(
+      `Invalid 'variant' prop for <Toast />, expected ${AVAILABLE_VARIANTS}, but got ${variant}`,
+    )
+  }
+
+  // Set the appropriate icon
+  useEffect(() => setIcon(ICONS_BY_VARIANT[variant]), [variant])
+
   return (
-    <div className={`${styles.toast} ${styles.notice}`}>
+    <div className={`${styles.toast} ${styles[variant]}`}>
       <div className={styles.iconContainer}>
-        <Info size={24} />
+        <Icon size={24} />
       </div>
-      <p className={styles.content}>16 photos have been uploaded</p>
-      <button type="button" className={styles.closeButton}>
+      <p className={styles.content}>{message}</p>
+      <button type="button" className={styles.closeButton} onClick={onDismiss}>
         <X size={24} />
         <VisuallyHidden>Dismiss message</VisuallyHidden>
       </button>
@@ -24,4 +40,13 @@ function Toast() {
   )
 }
 
+function useToast(initialValue = false) {
+  const [isShown, setShown] = useState(initialValue)
+
+  const toggle = useCallback(() => setShown(currShown => !currShown), [])
+
+  return [isShown, toggle, setShown]
+}
+
+export { useToast }
 export default Toast
